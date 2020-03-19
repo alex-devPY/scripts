@@ -1,0 +1,22 @@
+[19-03-2020 11:34:32] INFO ==> spankbang: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< START
+[19-03-2020 11:34:32] INFO ==> spankbang: domain: https://spankbang.com/
+[19-03-2020 11:34:32] INFO ==> spankbang: login to: cepic76591:s1234567
+[19-03-2020 11:34:32] INFO ==> spankbang: csrf_token: ImJhY2Y0Mzk3Mjg4ZmM1M2ZkNjM2OThlOWEwNDg3YTMyMWYwOGRmNjki.XnMulg.dRfil_nQQHuK5L7X-u7jUruq37M
+[19-03-2020 11:34:33] INFO ==> spankbang: login success: OK
+[19-03-2020 11:34:33] INFO ==> spankbang: filename: test.mp4
+[19-03-2020 11:34:33] INFO ==> spankbang: identifier: 242179537-testmp4
+[19-03-2020 11:34:33] INFO ==> spankbang: title: Hot sex video
+[19-03-2020 11:34:33] INFO ==> spankbang: tags: Dirty Talk,Sex,Hot
+[19-03-2020 11:34:33] INFO ==> spankbang: category: ['2', '21']
+[19-03-2020 11:34:33] INFO ==> spankbang: get https://spankbang.com/users/upload
+[19-03-2020 11:34:33] INFO ==> spankbang: filesize: 14283082
+[19-03-2020 11:34:38] INFO ==> spankbang: session: {'__cfduid': 'd4edc9f42de1bcd41c19e42edad5e6a011584606870', 'auth': 'Ijg1OTE3NzU6OjpjZXBpYzc2NTkxIg.xaGwvLfj264MX_AaBPWiclp_tpY', 'backend_version': 'master', 'sb_session': '.eJwVy0EOQDAQQNG7zNoCpaYOwRGk2plERCs1IiLurpb_J--Baae02UBBoJd0UgEunkHSDT0MI-Q8Ek8SVwr5zNZxo0xXI7JrFXuttEEytmyws6quuETP2mRHfpEl_ui64P0AHFYgww.XnMunQ.Os5kaG-YyxJs5DjVA8rcGnPWTL8'}
+[19-03-2020 11:34:39] INFO ==> spankbang: upload token {"results":"5dc915cd2c56f1ef547392415a967d"}
+
+[19-03-2020 11:34:39] INFO ==> spankbang: post to https://spankbang.com/api/upload_token, upload token: 5dc915cd2c56f1ef547392415a967d
+[19-03-2020 11:34:39] INFO ==> spankbang: part counts: 14
+[19-03-2020 11:34:39] INFO ==> spankbang: start attach file
+[19-03-2020 11:34:57] INFO ==> spankbang: end attach file
+[19-03-2020 11:34:57] INFO ==> spankbang: post to https://up11.spankbang.com/resumable_upload_data video data: {'auth_token': '5dc915cd2c56f1ef547392415a967d', 'name': 'Hot sex video', 'description': 'red gym shorts', 'channel': '0', 'orientaion': '0', 'tags[]': ['Dirty Talk', 'Sex', 'Hot'], 'category[]': ['2', '21']}
+[19-03-2020 11:34:57] ERROR ==> spankbang: upload error
+[19-03-2020 11:34:57] INFO ==> spankbang: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END

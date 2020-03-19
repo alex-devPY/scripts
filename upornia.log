@@ -1,0 +1,16 @@
+[19-03-2020 11:36:47] INFO ==> upornia: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< START
+[19-03-2020 11:36:48] INFO ==> upornia: login to: eve64warnock:RDBAv0tkF
+[19-03-2020 11:36:48] INFO ==> upornia: login success: {"status":"success","data":{"user_id":"545288","username":"eve64warnock","display_name":"eve64warnock","status_id":"2"}}
+[19-03-2020 11:36:52] INFO ==> upornia: current url: https://member.upornia.com/upload-video/
+[19-03-2020 11:36:52] INFO ==> upornia: title: Hot sex video
+[19-03-2020 11:36:52] INFO ==> upornia: tags: Dirty Talk,Sex,Hot
+[19-03-2020 11:36:52] INFO ==> upornia: description: red gym shorts
+[19-03-2020 11:36:53] INFO ==> upornia: category: 21
+[19-03-2020 11:36:53] INFO ==> upornia: start attach file
+[19-03-2020 11:36:56] INFO ==> upornia: file attach success: {"status":"success","data":{"filename":"24945615777015318782127919656439"}}
+[19-03-2020 11:36:56] INFO ==> upornia: current url after attach file: https://member.upornia.com/upload-video/?mode=async&format=json&action=upload_file&mode=async&format=json&action=upload_file
+[19-03-2020 11:37:00] INFO ==> upornia: post https://member.upornia.com/upload-video/24945615777015318782127919656439/ status code: 200
+[19-03-2020 11:37:00] INFO ==> upornia: solving captcha
+[19-03-2020 11:37:31] INFO ==> upornia: video data: {'content_source_id': '3487', 'title': 'Hot sex video', 'description': 'red gym shorts', 'screenshot': '', 'category_ids[]': '21', 'tags': 'Dirty Talk,Sex,Hot', 'is_private': '0', 'function': 'get_block', 'block_id': 'video_edit_video_edit', 'code': '', 'g-recaptcha-response:': '03AERD8XqB26H8qZojU0md5YWS0LYndvWfoLYMDy12voBs6UcQBZjnaxRPnB3EMlxAEDArwHYkTK9NYJDBpHzuL9tMVqYeFVRrJjiHR3N1HkUM1BORVZl0uZ1mfA9ZTyzM9NVv9r_fYFGVK18UHmENAlxtIsQ3vSAi69vX6VHUTslaTbVTZrnJe8wPhXTj0oN6LiITtrAMMdS14oJhrlxEX5aLKX7Um2qNaekv6NoK25B2ut6udV9mLyUYSRAQyTXJ2Nt7Tt_d4HrGpAgT1p0piCUnrkMllqslnzmREsS1WAZJxt33h_GWZN-rIgSYwF09EYJzdYN_6akAURQn9BaNw3aJzGPohBOe9wdrLHYEOWQgl8lBWaNtm6__YSLVuxND5dXDd5c2XOsK', 'action': 'add_new_complete', 'file': '24945615777015318782127919656439.mp4', 'file_hash': '24945615777015318782127919656439', 'format': 'json', 'mode': 'async'}
+[19-03-2020 11:37:31] ERROR ==> upornia: upload error: {"status":"failure","errors":[{"code":"required","field":"code","block":"video_edit","message":"The field is required"}]}
+[19-03-2020 11:37:31] INFO ==> upornia: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
