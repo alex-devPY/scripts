@@ -73,6 +73,7 @@ def upload_video(info,_domain):
     log.info("{}: tags: {}".format(name, info['tags']))
     log.info("{}: category: {}".format(name, category))
 
+
     s.headers.clear()
     url = urljoin(_domain, 'users/upload')
     log.info('{}: get {}'.format(name,url))
@@ -123,11 +124,13 @@ def upload_video(info,_domain):
     else:
         return True
 
-    part_count = int(dct['filesize'] / 1048576) + 1
+    # part_count = int(dct['filesize'] / 1048576) + 1
+    part_count = int(dct['filesize'] / 1048576)
     dct['part_count'] = part_count
     log.info("{}: part counts: {}".format(name, part_count))
 
     dct['resumableFilename'] = quote(dct['filename'])
+    dct['identifier'] = str(dct['filesize']) + '-' + re.sub('[\W]','', dct['filename'])
 
     start_c = 0
     end_c = 1048576
@@ -137,12 +140,14 @@ def upload_video(info,_domain):
 
         n_ = n + 1
 
-        try:
+        # try:
+        if n_ == part_count:
+            part_data = dct['video_data'][start_c:]
+        else:
             part_data = dct['video_data'][start_c:end_c]
-        except:
-            log.info("end_part_data".format(n_, len(part_data)))
-            return True
-
+        # except Exception:
+        #     log.info("end_part_data".format(n_, len(part_data)))
+        #     return True
 
         start_c += 1048576
         end_c += 1048576
@@ -150,6 +155,7 @@ def upload_video(info,_domain):
         dct['resumableCurrentChunkSize'] = len(part_data)
         dct['n_'] = n_
         dct['part_data'] = part_data
+
 
         url = 'https://{}.spankbang.com/resumable_upload?' \
               'resumableChunkNumber={}&' \
@@ -171,81 +177,65 @@ def upload_video(info,_domain):
                                        part_count,
                                        dct['upload_token'])
 
-        data = '''-----------------------------27884144051004
-Content-Disposition: form-data; name="resumableChunkNumber"
+        data = {
+            'resumableChunkNumber': n_,
+            'resumableChunkSize': 1048576,
+            'resumableCurrentChunkSize': dct['resumableCurrentChunkSize'],
+            'resumableTotalSize': dct['filesize'],
+            'resumableType': 'video/mp4',
+            'resumableFilename': dct['resumableFilename'],
+            'resumableTotalChunks': dct['part_count'],
+            'upload_token': dct['upload_token'],
+        }
 
-{n_}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableChunkSize"
+        files = {
+            'file': dct['part_data']
+        }
 
-1048576
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableCurrentChunkSize"
+        
 
-{resumableCurrentChunkSize}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableTotalSize"
-
-{filesize}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableType"
-
-video/mp4
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableIdentifier"
-
-{identifier}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableFilename"
-
-{resumableFilename}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableRelativePath"
-
-{resumableFilename}
------------------------------27884144051004
-Content-Disposition: form-data; name="resumableTotalChunks"
-
-{part_count}
------------------------------27884144051004
-Content-Disposition: form-data; name="upload_token"
-
-{upload_token}
------------------------------27884144051004
-Content-Disposition: form-data; name="file"; filename="{filename}"
-Content-Type: application/octet-stream
-
-{part_data}
------------------------------27884144051004--'''.format(**dct)
-
-        s.headers['Content-Type'] = 'multipart/form-data; boundary=---------------------------27884144051004'
-        s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         try:
-           resp = s.post(url, data)
+          
+           resp = s.post(url, data=data, files=files)
+           if 'OK' not in resp.text:
+               raise Exception('not OK upload')
         except Exception as e:
            log.error("{}: upload exception: {}".format(name, e))
            return True
 
     log.info('{}: end attach file'.format(name))
 
-
     url = 'https://%s.spankbang.com/resumable_upload_data' % server_num
-    #auto = 'https://%s.spankbang.com/resumable_upload_data_auto' % server_num
+    auto_url = 'https://%s.spankbang.com/resumable_upload_data_auto' % server_num
+
+    s.headers.clear()
+    s.headers['User-Agent'] = ua_rand
+    s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+
+
+
 
     data = {
-             'auth_token': dct['upload_token'],
+        'auth_token': dct['upload_token'],
+        'name': '',
+        'description': '',
+        'channel': '0',
+        'orientaion': -1
+    }
+
+    resp = s.post(auto_url, data)
+
+    data.update({
+             
              'name': dct['title'],
              'description': info['description'],
-             'channel': '0',
+             
              'orientaion': dct['orientation'],
              'tags[]': info['tags'].split(','), # [dct['tag1'], dct['tag2'], dct['tag3']],
-             'category[]': ['2', '21'] #[dct['cat1'], dct['cat2'], dct['cat3']]
-             }
+             'category[]': categories#['1', '41'] #[dct['cat1'], dct['cat2'], dct['cat3']]
+             })
 
     log.info('{}: post to {} video data: {}'.format(name, url, data))
-
-    s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-    s.headers['X-Requested-With'] = 'XMLHttpRequest'
 
     resp = s.post(url, data)
 
@@ -257,6 +247,7 @@ Content-Type: application/octet-stream
         with open(os.path.join(basedir, 'spankbang-upload-error.html'), 'wb') as files:
             files.write(resp.content)
         return True
+
 
 
 def login(username, password, _domain):
