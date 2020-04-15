@@ -71,8 +71,8 @@ def upload_video(info,_domain):
     log.info("{}: filename: {}".format(name, dct['filename']))
     log.info('{}: identifier: {}'.format(name, dct['identifier']))
     log.info("{}: title: {}".format(name, dct['title']))
-    log.info("{}: tags: {}".format(name, info['tags']))
-    log.info("{}: category: {}".format(name, category))
+    log.info("{}: tags: {}".format(name, dct['tags']))
+    log.info("{}: category: {}".format(name, dct['category']))
 
 
     s.headers.clear()
