@@ -41,6 +41,7 @@ i_handler.setLevel(logging.INFO)
 i_handler.setFormatter(formatter)
 log.addHandler(i_handler)
 
+
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -55,24 +56,22 @@ data_sitekey = '6LcoxXsUAAAAAGEox9WUa_lOTuPnOr6WxUH57ryQ'
 site = 'https://spankbang.com'
 
 
-
 def upload_video(info,_domain):
-    dct = {}
-    dct['filename'] = info['filename']
-    dct['title'] = info['title']
-    dct['orientation'] = '0'
+    dct = {
+        'filename': info['filename'],
+        'title': info['title'],
+        'orientation': '0'
+    }
     #cat = '{}'.format(make_category(info['tags'], spankbang_category))
     cat = '2,21'
     category = cat.split(',')
-    dct['identifier'] = str(random.randint(100000000,900000000)) + '-' + re.sub('[\W]','',dct['filename'])
+    dct['identifier'] = str(random.randint(100000000, 900000000)) + '-' + re.sub('[\W]', '', dct['filename'])
 
     log.info("{}: filename: {}".format(name, dct['filename']))
-
     log.info('{}: identifier: {}'.format(name, dct['identifier']))
     log.info("{}: title: {}".format(name, dct['title']))
     log.info("{}: tags: {}".format(name, info['tags']))
     log.info("{}: category: {}".format(name, category))
-
 
     s.headers.clear()
     url = urljoin(_domain, 'users/upload')
@@ -83,7 +82,6 @@ def upload_video(info,_domain):
     s.headers['Referer'] = _domain
 
     resp = s.get(url, verify=False)
-
 
     dct['video_data'] = get_file_data(info['video'])
     dct['filesize'] = len(dct['video_data'])
@@ -125,7 +123,6 @@ def upload_video(info,_domain):
     else:
         return True
 
-
     part_count = int(dct['filesize'] / 1048576) + 1
     dct['part_count'] = part_count
     log.info("{}: part counts: {}".format(name, part_count))
@@ -153,7 +150,6 @@ def upload_video(info,_domain):
         dct['resumableCurrentChunkSize'] = len(part_data)
         dct['n_'] = n_
         dct['part_data'] = part_data
-
 
         url = 'https://{}.spankbang.com/resumable_upload?' \
               'resumableChunkNumber={}&' \
@@ -222,7 +218,6 @@ Content-Type: application/octet-stream
 {part_data}
 -----------------------------27884144051004--'''.format(**dct)
 
-
         s.headers['Content-Type'] = 'multipart/form-data; boundary=---------------------------27884144051004'
         s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         try:
@@ -247,7 +242,7 @@ Content-Type: application/octet-stream
              'category[]': ['2', '21'] #[dct['cat1'], dct['cat2'], dct['cat3']]
              }
 
-    log.info('{}: post to {} video data: {}'.format(name,url,data))
+    log.info('{}: post to {} video data: {}'.format(name, url, data))
 
     s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     s.headers['X-Requested-With'] = 'XMLHttpRequest'
@@ -263,8 +258,8 @@ Content-Type: application/octet-stream
             files.write(resp.content)
         return True
 
-def login(username,password,_domain):
 
+def login(username, password, _domain):
 
     log.info("{}: login to: {}:{}".format(name, username,password))
 
@@ -276,26 +271,28 @@ def login(username,password,_domain):
     log.info("{}: csrf_token: {}".format(name, csrf))
 
     data = {
-            'l_username': username,
-            'l_password': password,
-            'csrf_token': csrf
-            }
+        'l_username': username,
+        'l_password': password,
+        'csrf_token': csrf
+    }
 
-    resp = s.post(url,data)
+    resp = s.post(url, data)
 
-    if  'OK' in resp.text:
-        log.info("{}: login success: {}".format(name,resp.text))
+    if resp.text in ['OK', 'Log out']:
+        log.info("{}: login success: {}".format(name, resp.text))
         return _domain
     else:
         log.info("{}: login error".format(name))
-        with open(os.path.join(basedir,'log/spankbang-login-error.html'), 'wb') as files:
+        with open(os.path.join(basedir, 'log/spankbang-login-error.html'), 'wb') as files:
             files.write(resp.content)
         exit()
+
 
 def get_file_data(path):
     with open(path, 'rb') as f:
         fdata = f.read()
     return fdata.decode('latin-1')
+
 
 def main():
     global s
@@ -303,23 +300,22 @@ def main():
     s.headers['User-Agent'] = ua_rand
     s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     s.headers['X-Requested-With'] = 'XMLHttpRequest'
-    _d = s.get(site,verify = False)
+    _d = s.get(site, verify=False)
     _domain = _d.url
     log.info('{}: domain: {}'.format(name, _domain))
-    username = 'cepic76591'
-    password = 's1234567'
-    login(username,password,_domain)
-    info = {}
-    info['filename'] = 'test.mp4'
-    info['video'] = 'test.mp4'
-    info['title'] = 'Hot sex video'
-    info['description'] = 'red gym shorts'
-    info['tags'] = 'Dirty Talk,Sex,Hot'
+    login(username='cepic76591', password='s1234567', _domain=_domain)
+    info = {
+        'filename': 'test.mp4',
+        'video': 'test.mp4',
+        'title': 'Hot sex video',
+        'description': 'red gym shorts',
+        'tags': 'Dirty Talk,Sex,Hot',
+    }
     upload_video(info, _domain)
 
 
-
 if __name__ == "__main__":
+    use_proxy = False
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     requests.packages.urllib3.disable_warnings(SNIMissingWarning)
     requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)

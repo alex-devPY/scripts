@@ -47,7 +47,7 @@ sys.excepthook = handle_exception
 site = 'https://upornia.com'
 ua_rand = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36'
 website_key = '6LcO84gUAAAAABo7-FXTRVBwn9GxPzoS4grX5Q9l'
-antigate_key = "7bc55f9a40cf8467591f94cbb1d63db0"
+antigate_key = "9aea3aba070433538020b025c60f53ef"
 
 
 def login(username,password):
@@ -177,13 +177,13 @@ async
 
     #if 'g-recaptcha-response' in resp.text:
     log.info("{}: solving captcha".format(name))
-    
+
     response_captcha = Antigate(
-                                 apikey = antigate_key,
-                                 website_key = website_key,
-                                 website_url = url,
-                                 useragent = ua_rand,
-                                 wait_limit = 10
+                                 apikey=antigate_key,
+                                 website_key=website_key,
+                                 website_url=url,
+                                 useragent=ua_rand,
+                                 wait_limit=10
                                  )
 
     hashf = dct['filename_hash'] + '.mp4'
@@ -199,20 +199,32 @@ async
                'function': 'get_block',
                'block_id': 'video_edit_video_edit',
                'code': '',
-               'g-recaptcha-response:': response_captcha.captcha_text,
+               'g-recaptcha-response': response_captcha.captcha_text,
                'action': 'add_new_complete',
                'file': hashf,
                'file_hash': dct['filename_hash'],
                'format': 'json',
-               'mode':'async'
+               'mode': 'async'
            }
 
-    log.info('{}: video data: {}'.format(name,data))
+    log.info('{}: video data: {}'.format(name, data))
 
     s.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     s.headers['X-Requested-With'] = 'XMLHttpRequest'
 
     resp = s.post(url, data)
+    while 'The entered code is not valid, please try once again' in resp.text:
+        print('The entered captcha is not valid, trying again')
+        log.info('The entered captcha is not valid, trying receive new captcha')
+
+        data['g-recaptcha-response'] = Antigate(
+                                 apikey=antigate_key,
+                                 website_key=website_key,
+                                 website_url=url,
+                                 useragent=ua_rand,
+                                 wait_limit=10
+                                 ).captcha_text
+        resp = s.post(url, data)
     with open(os.path.join(basedir, 'upornia-upload-result.html'), 'wb') as files:
             files.write(resp.content)
     if 'Video has been created successfully' in resp.text:
