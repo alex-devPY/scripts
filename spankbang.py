@@ -63,8 +63,9 @@ def upload_video(info,_domain):
         'orientation': '0'
     }
     #cat = '{}'.format(make_category(info['tags'], spankbang_category))
-    cat = '2,21'
-    category = cat.split(',')
+    
+    dct['category'] = ['2','21']
+    dct['tags'] = info['tags'].split(',')
     dct['identifier'] = str(random.randint(100000000, 900000000)) + '-' + re.sub('[\W]', '', dct['filename'])
 
     log.info("{}: filename: {}".format(name, dct['filename']))
@@ -140,14 +141,12 @@ def upload_video(info,_domain):
 
         n_ = n + 1
 
-        # try:
+       
         if n_ == part_count:
             part_data = dct['video_data'][start_c:]
         else:
             part_data = dct['video_data'][start_c:end_c]
-        # except Exception:
-        #     log.info("end_part_data".format(n_, len(part_data)))
-        #     return True
+
 
         start_c += 1048576
         end_c += 1048576
@@ -228,11 +227,10 @@ def upload_video(info,_domain):
     data.update({
              
              'name': dct['title'],
-             'description': info['description'],
-             
+             'description': info['description'],             
              'orientaion': dct['orientation'],
-             'tags[]': info['tags'].split(','), # [dct['tag1'], dct['tag2'], dct['tag3']],
-             'category[]': categories#['1', '41'] #[dct['cat1'], dct['cat2'], dct['cat3']]
+             'tags[]': dct['tags'],
+             'category[]': dct['category']
              })
 
     log.info('{}: post to {} video data: {}'.format(name, url, data))
